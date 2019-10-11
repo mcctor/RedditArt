@@ -52,9 +52,14 @@ func startstreamingHandler(message *tb.Message) {
 	if user.Streaming {
 		_, err := Bot.Send(message.Sender, "You are already streaming.")
 		checkError(err)
+	} else {
+		user.Streaming = true
+		_, err := Bot.Send(
+			message.Sender,
+			"You will now periodically receive new images, to stop, press /stopstreaming.")
+		checkError(err)
+		db.UpdateUser(user)
 	}
-	user.Streaming = true
-	db.UpdateUser(user)
 }
 
 func stopstreamingHandler(message *tb.Message) {
@@ -63,9 +68,14 @@ func stopstreamingHandler(message *tb.Message) {
 	if !user.Streaming {
 		_, err := Bot.Send(message.Sender, "You are currently not streaming.")
 		checkError(err)
+	} else {
+		user.Streaming = false
+		_, err := Bot.Send(
+			message.Sender,
+			"You will no longer receive any new images. Press /startstreaming to get images.")
+		checkError(err)
+		db.UpdateUser(user)
 	}
-	user.Streaming = false
-	db.UpdateUser(user)
 }
 
 func sendPhoto(user *tb.User, newPost db.Post) {
