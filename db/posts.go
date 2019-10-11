@@ -15,19 +15,6 @@ func AddPost(newPost Post) {
 	db.Create(&newPost)
 }
 
-func GetPostByID(id int) (*Post, bool) {
-	db := createSess(dbDialect, dbFile)
-	defer db.Close()
-
-	var foundPost Post
-	db.First(&foundPost, "post_id = ?", id)
-	if foundPost.PostID == "" {
-		return nil, false
-	} else {
-		return &foundPost, true
-	}
-}
-
 func GetAllPosts() (allPosts []*Post) {
 	db := createSess(dbDialect, dbFile)
 	defer db.Close()

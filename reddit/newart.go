@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	historyLimit  = 20
-	waitTime      = 600
-	minUpVotes    = 100
-	postsToBeSent = 3
+	historyLimit = 10
+	waitTime     = 30 // in minutes
+	minutes      = 60
+	minUpVotes   = 100
 )
 
 func isCandidate(upvotes int32) bool {
@@ -30,11 +30,7 @@ func NewPosts(subreddit string) {
 		harvest, err := redditBot.Listing(subreddit, "")
 		checkError(err)
 
-		var count uint
 		for _, post := range harvest.Posts[:historyLimit] {
-			//if count < postsToBeSent {
-			//	break
-			//}
 			newPost := db.Post{
 				PostID:   post.ID,
 				Caption:  post.Title,
@@ -45,11 +41,10 @@ func NewPosts(subreddit string) {
 			if _, exists := candidatePosts.Posts[newPost]; !exists && isCandidate(post.Ups) {
 				candidatePosts.Posts[newPost] = struct{}{}
 				db.AddPost(newPost)
-				count++
 				telegram.SendPhotoToAll(newPost)
 			}
 		}
 
-		time.Sleep(waitTime)
+		time.Sleep(waitTime * minutes)
 	}
 }

@@ -9,7 +9,7 @@ import (
 
 const (
 	dbDialect = "sqlite3"
-	dbFile    = "sqlite.db"
+	dbFile    = "db.sqlite3"
 )
 
 func init() {
@@ -17,8 +17,7 @@ func init() {
 	defer db.Close()
 
 	// migrate models to database
-	db.AutoMigrate(&Post{})
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Post{}, &User{})
 }
 
 func createSess(dbDialect string, dbFile string) *gorm.DB {

@@ -26,10 +26,10 @@ func GetUserByID(id int) (*User, bool) {
 
 	var foundUser User
 	db.First(&foundUser, "user_id = ?", id)
-	if foundUser.FirstName == "" {
-		return nil, false
-	} else {
+	if foundUser.FirstName != "" {
 		return &foundUser, true
+	} else {
+		return nil, false
 	}
 }
 

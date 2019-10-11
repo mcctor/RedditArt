@@ -10,12 +10,21 @@ var redditBot reddit.Bot
 
 func init() {
 	var err error
-	redditBot, err = reddit.NewBotFromAgentFile(".agent", 0)
+	redditBot, err = reddit.NewBot(reddit.BotConfig{
+		Agent: "Ubuntu:github.com/mcctor/goreddit:v0.1.0(by /u/mcctor)",
+		App: reddit.App{
+			ID:       "K_P1LTKylZMqAw",
+			Secret:   "snpKwH-hrKU29KeYFQxQn_wA9aQ",
+			Username: "mcctor",
+			Password: "@lienmwanga01",
+		},
+		Rate: 0,
+	})
 	checkError(err)
 }
 
 func checkError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }

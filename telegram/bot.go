@@ -9,7 +9,9 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-var Bot *tb.Bot
+var (
+	Bot *tb.Bot
+)
 
 const (
 	redditBaseUrl = "https://reddit.com"
@@ -31,31 +33,37 @@ func init() {
 
 func startHandler(message *tb.Message) {
 	if _, exists := db.GetUserByID(message.Sender.ID); exists {
-		// welcome old user
 		_, err := Bot.Send(message.Sender, "Welcome back! Press /startstreaming to start receiving images")
 		checkError(err)
 
 	} else {
-		// register new user
 		db.AddUser(db.User{
 			UserID:    message.Sender.ID,
 			FirstName: message.Sender.FirstName,
 		})
-
-		// welcome new user
 		_, err := Bot.Send(message.Sender, "Welcome! Press /startstreaming to start receiving images")
 		checkError(err)
 	}
 }
 
 func startstreamingHandler(message *tb.Message) {
-	user, _ := db.GetUserByID(message.Sender.ID)
+	user, exists := db.GetUserByID(message.Sender.ID)
+	registerAccountFirst(exists, message.Sender)
+	if user.Streaming {
+		_, err := Bot.Send(message.Sender, "You are already streaming.")
+		checkError(err)
+	}
 	user.Streaming = true
 	db.UpdateUser(user)
 }
 
 func stopstreamingHandler(message *tb.Message) {
-	user, _ := db.GetUserByID(message.Sender.ID)
+	user, exists := db.GetUserByID(message.Sender.ID)
+	registerAccountFirst(exists, message.Sender)
+	if !user.Streaming {
+		_, err := Bot.Send(message.Sender, "You are currently not streaming.")
+		checkError(err)
+	}
 	user.Streaming = false
 	db.UpdateUser(user)
 }
@@ -71,6 +79,13 @@ func sendPhoto(user *tb.User, newPost db.Post) {
 func SendPhotoToAll(newPost db.Post) {
 	for _, user := range db.GetAllUsers(true) {
 		sendPhoto(&tb.User{ID: user.UserID}, newPost)
+	}
+}
+
+func registerAccountFirst(userExists bool, recipient tb.Recipient) {
+	if !userExists {
+		_, err := Bot.Send(recipient, "Register account first by pressing /start")
+		checkError(err)
 	}
 }
 
