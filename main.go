@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	_ "github.com/mcctor/redditart/db"
 	"github.com/mcctor/redditart/reddit"
 	"github.com/mcctor/redditart/telegram"
 )
