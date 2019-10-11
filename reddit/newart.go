@@ -1,8 +1,6 @@
 package reddit
 
 import (
-	"log"
-
 	"github.com/mcctor/redditart/db"
 	"github.com/mcctor/redditart/reddit/candidates"
 	"github.com/mcctor/redditart/telegram"
