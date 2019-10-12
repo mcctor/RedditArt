@@ -1,7 +1,6 @@
 package reddit
 
 import (
-	"log"
 	"time"
 
 	"github.com/mcctor/redditart/db"
@@ -40,13 +39,11 @@ func NewPosts(subreddit string) {
 			Rate: 0,
 		})
 		if err != nil {
-			log.Println(err)
 			continue
 		}
 
 		harvest, err := redditBot.Listing(subreddit, "")
 		if err != nil {
-			log.Println(err)
 			continue
 		}
 
