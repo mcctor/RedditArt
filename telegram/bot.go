@@ -46,36 +46,36 @@ func startHandler(message *tb.Message) {
 	}
 }
 
-func startstreamingHandler(message *tb.Message) {
+func startStopStreamingHelper(message *tb.Message, streaming bool, streamingText, notStreamingText string) {
 	user, exists := db.GetUserByID(message.Sender.ID)
 	registerAccountFirst(exists, message.Sender)
 	if user.Streaming {
-		_, err := Bot.Send(message.Sender, "You are already streaming.")
+		_, err := Bot.Send(message.Sender, streamingText)
 		checkError(err)
 	} else {
-		user.Streaming = true
+		user.Streaming = streaming
 		_, err := Bot.Send(
 			message.Sender,
-			"You will now periodically receive new images, to stop, press /stopstreaming.")
+			notStreamingText)
 		checkError(err)
 		db.UpdateUser(user)
 	}
 }
 
+func startstreamingHandler(message *tb.Message) {
+	startStopStreamingHelper(
+		message,
+		true,
+		"You are already streaming",
+		"You will now periodically receive new images, to stop, press /stopstreaming.")
+}
+
 func stopstreamingHandler(message *tb.Message) {
-	user, exists := db.GetUserByID(message.Sender.ID)
-	registerAccountFirst(exists, message.Sender)
-	if !user.Streaming {
-		_, err := Bot.Send(message.Sender, "You are currently not streaming.")
-		checkError(err)
-	} else {
-		user.Streaming = false
-		_, err := Bot.Send(
-			message.Sender,
-			"You will no longer receive any new images. Press /startstreaming to get images.")
-		checkError(err)
-		db.UpdateUser(user)
-	}
+	startStopStreamingHelper(
+		message,
+		true,
+		"You will no longer receive any new images. Press /startstreaming to get images.",
+		"You are currently not streaming.")
 }
 
 func sendPhoto(user *tb.User, newPost db.Post) {

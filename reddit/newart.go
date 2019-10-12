@@ -30,7 +30,7 @@ func NewPosts(subreddit string) {
 
 	for {
 		redditBot, err := reddit.NewBot(reddit.BotConfig{
-			Agent: "Ubuntu:github.com/mcctor/goreddit:v0.1.0(by /u/mcctor)",
+			Agent: "Ubuntu:github.com/mcctor/redditart:v0.1.0(by /u/mcctor)",
 			App: reddit.App{
 				ID:       "K_P1LTKylZMqAw",
 				Secret:   "snpKwH-hrKU29KeYFQxQn_wA9aQ",
@@ -39,10 +39,16 @@ func NewPosts(subreddit string) {
 			},
 			Rate: 0,
 		})
-		checkError(err)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 
 		harvest, err := redditBot.Listing(subreddit, "")
-		checkError(err)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 
 		candidatePosts := candidates.GetPosts()
 		for _, post := range harvest.Posts[historyLimit:] {
@@ -61,11 +67,5 @@ func NewPosts(subreddit string) {
 		}
 
 		time.Sleep(timeToWait * minutes)
-	}
-}
-
-func checkError(err error) {
-	if err != nil {
-		log.Fatal(err)
 	}
 }
