@@ -1,6 +1,7 @@
 package reddit
 
 import (
+	"os"
 	"time"
 
 	"github.com/mcctor/redditart/db"
@@ -29,12 +30,12 @@ func NewPosts(subreddit string) {
 
 	for {
 		redditBot, err := reddit.NewBot(reddit.BotConfig{
-			Agent: "Ubuntu:github.com/mcctor/redditart:v0.1.0(by /u/mcctor)",
+			Agent: os.Getenv("REDDIT_AGENT"),
 			App: reddit.App{
-				ID:       "K_P1LTKylZMqAw",
-				Secret:   "snpKwH-hrKU29KeYFQxQn_wA9aQ",
-				Username: "mcctor",
-				Password: "@lienmwanga01",
+				ID:       os.Getenv("REDDIT_ID"),
+				Secret:   os.Getenv("REDDIT_SECRET"),
+				Username: os.Getenv("REDDIT_USERNAME"),
+				Password: os.Getenv("REDDIT_PASSWORD"),
 			},
 			Rate: 0,
 		})

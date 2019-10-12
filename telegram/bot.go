@@ -3,6 +3,7 @@ package telegram
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/mcctor/redditart/db"
@@ -20,7 +21,7 @@ const (
 func init() {
 	var err error
 	Bot, err = tb.NewBot(tb.Settings{
-		Token:  "743129363:AAGhApUDIdj4Khk9CibgRTCHWt0BMojofMo",
+		Token:  os.Getenv("TELEGRAM_TOKEN"),
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 	checkError(err)
