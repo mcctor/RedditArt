@@ -7,7 +7,5 @@ import (
 
 func main() {
 	go reddit.NewPosts("/r/art")
-	go reddit.NewPosts("/r/artporn")
-
 	telegram.Bot.Start()
 }

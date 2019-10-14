@@ -1,6 +1,7 @@
 package reddit
 
 import (
+	"log"
 	"os"
 	"time"
 
@@ -40,12 +41,12 @@ func NewPosts(subreddit string) {
 			Rate: 0,
 		})
 		if err != nil {
-			continue
+			log.Fatal(err)
 		}
 
 		harvest, err := redditBot.Listing(subreddit, "")
 		if err != nil {
-			continue
+			log.Fatal(err)
 		}
 
 		candidatePosts := candidates.GetPosts()
