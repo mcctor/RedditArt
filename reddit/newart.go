@@ -30,6 +30,8 @@ func isCandidate(upvotes int32) bool {
 func NewPosts(subreddit string) {
 
 	for {
+		time.Sleep(timeToWait * minutes)
+
 		redditBot, err := reddit.NewBot(reddit.BotConfig{
 			Agent: os.Getenv("REDDIT_AGENT"),
 			App: reddit.App{
@@ -41,12 +43,14 @@ func NewPosts(subreddit string) {
 			Rate: 0,
 		})
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		}
 
 		harvest, err := redditBot.Listing(subreddit, "")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		}
 
 		candidatePosts := candidates.GetPosts()
@@ -64,7 +68,5 @@ func NewPosts(subreddit string) {
 				telegram.SendPhotoToAll(newPost)
 			}
 		}
-
-		time.Sleep(timeToWait * minutes)
 	}
 }
