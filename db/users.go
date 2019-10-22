@@ -10,7 +10,7 @@ func UpdateUser(user *User) {
 	db := createSess(dbDialect, dbFile)
 	defer db.Close()
 
-	db.Model(user).Updates(*user)
+	db.Save(user)
 }
 
 func AddUser(user User) {
