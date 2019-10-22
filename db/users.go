@@ -1,5 +1,7 @@
 package db
 
+import "fmt"
+
 type User struct {
 	UserID    int `gorm:"unique"`
 	FirstName string
@@ -9,6 +11,7 @@ type User struct {
 func UpdateUser(user *User) {
 	db := createSess(dbDialect, dbFile)
 	defer db.Close()
+	fmt.Println(user.UserID)
 
 	db.Save(user)
 }
